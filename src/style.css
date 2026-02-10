@@ -1,0 +1,65 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap");
+@import "tailwindcss";
+
+/* Theme variables (used by Tailwind utilities and custom classes) */
+:root {
+	--grid-template-columns-13: repeat(13, minmax(0, 1fr));
+	--font-pixel: "Press Start 2P", cursive;
+	--font-love: "VT323", monospace;
+}
+
+/* Custom grid utility (replaces Tailwind grid-cols-13 from @theme) */
+.grid-cols-13 {
+	grid-template-columns: var(--grid-template-columns-13);
+}
+
+body {
+	font-family: var(--font-pixel);
+	background-color: #911d95;
+	margin: 0;
+	overflow-x: hidden;
+}
+
+.font-pixel-love {
+	font-family: var(--font-love);
+}
+
+/* --- BOTONES MEJORADOS --- */
+.pixel-btn {
+	position: relative;
+	padding: 0.5rem;
+	/* Eliminamos 'inherit' para que funcionen las clases bg-red-500, etc. */
+	border-right: 4px solid #000;
+	border-bottom: 5px solid #000;
+	border-top: 2px solid rgba(255, 255, 255, 0.3);
+	border-left: 2px solid rgba(255, 255, 255, 0.3);
+	transition: all 0.1s;
+	text-shadow: 2px 2px 0px #000;
+	font-family: var(--font-love);
+	color: white;
+	cursor: pointer;
+	display: block;
+	width: 100%;
+	font-size: 7vw;
+}
+
+.pixel-btn:active {
+	border-right-width: 2px;
+	border-bottom-width: 2px;
+	transform: translateY(6px) translateX(6px);
+}
+
+/* --- ANIMACIÓN LATIDO --- */
+.heart-beat {
+	animation: beat 1s infinite ease-in-out;
+}
+
+@keyframes beat {
+	0%,
+	100% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.05);
+	}
+}
