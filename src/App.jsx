@@ -39,7 +39,8 @@ function FallingParticles({ type = "petal" }) {
 // --- COMPONENTE: PÁGINA DEL VIDEO (Opción NO) ---
 function VideoPage({ onBack }) {
 	return (
-		<div className="w-full min-h-screen flex flex-col items-center justify-center bg-black p-4 z-[200] relative">
+		<div className="w-full min-h-screen flex flex-col items-center justify-center bg-[#2a0808] p-4 z-[200] relative">
+			<div className="absolute top-10 text-6xl animate-pulse">🏴‍☠️</div>
 			<button
 				type="button"
 				onClick={onBack}
@@ -47,22 +48,28 @@ function VideoPage({ onBack }) {
 			>
 				← Regresar
 			</button>
-			<div className="w-full max-w-md border-4 border-white bg-gray-900 p-2 shadow-2xl">
-				<p className="font-pixel-love text-white text-xl md:text-2xl mt-4 mb-4 animate-pulse text-center">
-					Hijole... creo que no se va a poder
+			<div className="w-full max-w-md border-4 border-red-500 bg-black p-2 shadow-[0_0_20px_red]">
+				<p className="font-pixel-love text-red-500 text-xl md:text-2xl mt-4 mb-4 animate-pulse text-center">
+					Hijole...creo que no se va a poder <br /> Esta opción no existe en mi
+					mundo
 				</p>
 				<video
 					src={rejectionVideo}
 					autoPlay
 					controls
-					className="w-full border-2 border-white"
+					className="w-full border-2 border-red-900"
 				>
 					<track kind="captions" srcLang="es" label="Español" />
 				</video>
 			</div>
-			<p className="font-pixel-love text-red-500 text-xl mt-6 animate-bounce text-center">
-				Lo siento, esta opción no es seleccionable.
-			</p>
+			<div className="mt-8 flex gap-4 text-4xl f">
+				<span>☠️</span>
+				<span>❤️</span>
+				<span>☠️</span>
+			</div>
+			<span className="font-pixel-love text-red-500 text-xl md:text-2xl mt-4 mb-4 animate-pulse text-center">
+				PORQUE PARA MI NO EXISTE UN MUNDO EN EL QUE NO ESTÉS A MI LADO 🥹
+			</span>
 		</div>
 	);
 }
@@ -86,61 +93,29 @@ function ValentinePage({ onBack }) {
 	}
 
 	useEffect(() => {
-		const start = new Date("2019-06-06T00:00:00");
-		function getTimeLeft() {
-			const now = new Date();
-			const diff = now - start;
-			return {
-				años: Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25)),
-				meses: Math.floor((diff / (1000 * 60 * 60 * 24 * 30.44)) % 12),
-				días: Math.floor((diff / (1000 * 60 * 60 * 24)) % 30.44),
-				horas: Math.floor((diff / (1000 * 60 * 60)) % 24),
-				minutos: Math.floor((diff / 1000 / 60) % 60),
-				segundos: Math.floor((diff / 1000) % 60),
-			};
-		}
-		const timer = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
+		const timer = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000);
 		return () => clearInterval(timer);
 	}, []);
 
 	const heartColors = ["#FF0000", "#FF69B4", "#FF1493", "#FFFFFF", "#FFB6C1"];
-	const hearts = Array.from({ length: 120 }, (_, i) => {
-		let x, y, r, t;
-		if (i < 60) {
-			t = (i / 60) * 2 * Math.PI;
-			r = 1;
-		} else {
-			t = Math.random() * 2 * Math.PI;
-			r = Math.sqrt(Math.random());
-		}
-		x = r * 16 * Math.pow(Math.sin(t), 3);
-		y =
-			r *
-			-(
-				13 * Math.cos(t) -
-				5 * Math.cos(2 * t) -
-				2 * Math.cos(3 * t) -
-				Math.cos(4 * t)
-			);
-		return {
-			id: i,
-			x: x * 7.5,
-			y: y * 7.5,
-			delay: 1.8 + (i < 60 ? i * 0.03 : Math.random() * 2),
-			size: i < 60 ? 18 : Math.random() * 12 + 10,
-			color: heartColors[Math.floor(Math.random() * heartColors.length)],
-			rotate: Math.random() * 40 - 20,
-		};
-	});
+	// Confeti de corazones dispersos
+	const hearts = Array.from({ length: 50 }, (_, i) => ({
+		id: i,
+		left: Math.random() * 100,
+		top: Math.random() * 100,
+		delay: Math.random() * 3,
+		size: 20 + Math.random() * 30,
+		color: heartColors[Math.floor(Math.random() * heartColors.length)],
+	}));
 
 	return (
 		<div className="w-full min-h-screen flex flex-col items-center bg-[#0ea5e9] p-4 text-white overflow-y-auto pb-20 relative">
 			<FallingParticles type="petal" />
 			{onBack()}
 			<div className="mt-24 text-center space-y-8 w-full max-w-2xl flex flex-col items-center z-10">
-				<h2 className="font-pixel-love text-2xl md:text-3xl text-[#cac3d6] drop-shadow-[2px_2px_0px_#000] px-2">
-					Gracias por aceptar "voluntariamente" jsjs uwu, y gracias por aceptar
-					compartir mi vida contigo hace...
+				<h2 className="font-pixel-love text-2xl md:text-3xl text-white drop-shadow-[2px_2px_0px_#000] px-2">
+					SABÍA QUE DIRÍAS QUE SÍ VOLUNTARIAMENTE :v ❤️ <br />
+					Gracias por compartir tu vida conmigo desde hace...
 				</h2>
 				<div className="grid grid-cols-2 md:grid-cols-3 gap-3 font-pixel-love w-full">
 					{Object.entries(timeLeft).map(([label, value]) => (
@@ -148,50 +123,35 @@ function ValentinePage({ onBack }) {
 							key={label}
 							className="bg-black/40 p-3 border-b-4 border-r-4 border-black"
 						>
-							<div className="text-3xl text-qhite-500">{value}</div>
+							<div className="text-3xl text-white">{value}</div>
 							<div className="text-xs uppercase">{label}</div>
 						</div>
 					))}
 				</div>
 
-				<div className="relative h-[450px] w-full flex items-end justify-center mt-10 mb-10 scale-90 md:scale-100">
-					<div className="w-7 h-40 bg-[#3d2523] border-2 border-black animate-trunk relative z-10">
-						<div className="absolute top-12 right-full w-24 h-3 bg-[#3d2523] border-2 border-black origin-right -rotate-[35deg] animate-branch">
-							<div className="absolute top-0 right-full w-14 h-2 bg-[#3d2523] border-2 border-black origin-right rotate-[40deg]">
-								<div className="absolute top-0 right-full w-8 h-1 bg-[#3d2523] border-black origin-right -rotate-[20deg]" />
-							</div>
+				{/* --- SECCIÓN DE CONFETI DE CORAZONES --- */}
+				<div className="relative w-full h-64 mt-4 overflow-hidden rounded-xl bg-white/10 border-2 border-dashed border-white/30">
+					{hearts.map((h) => (
+						<div
+							key={h.id}
+							className="absolute animate-bounce opacity-80"
+							style={{
+								left: `${h.left}%`,
+								top: `${h.top}%`,
+								animationDelay: `${h.delay}s`,
+								fontSize: `${h.size}px`,
+								color: h.color,
+							}}
+						>
+							❤️
 						</div>
-						<div className="absolute top-6 left-full w-28 h-3 bg-[#3d2523] border-2 border-black origin-left rotate-[40deg] animate-branch">
-							<div className="absolute top-0 left-full w-16 h-2 bg-[#3d2523] border-2 border-black origin-left -rotate-[30deg]">
-								<div className="absolute top-0 left-full w-10 h-1 bg-[#3d2523] border-black origin-left rotate-[25deg]" />
-							</div>
-						</div>
-						<div className="absolute -top-12 left-1/2 -translate-x-1/2 w-3 h-16 bg-[#3d2523] border-2 border-black animate-branch">
-							<div className="absolute top-0 left-full w-10 h-2 bg-[#3d2523] border-2 border-black origin-left -rotate-[45deg]" />
-							<div className="absolute top-0 right-full w-10 h-2 bg-[#3d2523] border-2 border-black origin-right rotate-[45deg]" />
-						</div>
+					))}
+					<div className="absolute inset-0 flex items-center justify-center">
+						<span className="font-pixel-love text-4xl animate-pulse">
+							Eres el motivo que convierte el cansancio en propósito
+							<br></br>TE AMO
+						</span>
 					</div>
-					<div className="absolute bottom-56 z-20">
-						{hearts.map((h) => (
-							<div
-								key={h.id}
-								className="absolute animate-pop opacity-0 pointer-events-none"
-								style={{
-									left: `${h.x}px`,
-									top: `${h.y}px`,
-									animationDelay: `${h.delay}s`,
-									fontSize: `${h.size}px`,
-									color: h.color,
-									transform: `rotate(${h.rotate}deg)`,
-									textShadow:
-										h.color === "#FFFFFF" ? "0 0 5px #FF69B4" : "none",
-								}}
-							>
-								❤️
-							</div>
-						))}
-					</div>
-					<div className="absolute bottom-0 w-80 h-3 bg-[#2d1a1a] border-b-4 border-black" />
 				</div>
 			</div>
 		</div>
@@ -199,7 +159,7 @@ function ValentinePage({ onBack }) {
 }
 
 // --- COMPONENTE: NUESTRA HISTORIA ---
-function HistoryPage({ onBack }) {
+function HistoryPage({ onBack, onNext }) {
 	const fotos = [
 		{
 			id: 1,
@@ -260,7 +220,7 @@ function HistoryPage({ onBack }) {
 				{fotos.map((foto, index) => (
 					<div
 						key={foto.id}
-						className={`bg-white p-3 pb-10 shadow-2xl w-64 transform ${index % 2 === 0 ? "rotate-3" : "-rotate-3"}`}
+						className={`bg-white p-3 pb-10 shadow-2xl w-64 border-4 border-pink-200 transform ${index % 2 === 0 ? "rotate-3" : "-rotate-3"}`}
 					>
 						<div className="bg-gray-200 w-full aspect-square overflow-hidden border-2 border-gray-100">
 							<img
@@ -275,9 +235,47 @@ function HistoryPage({ onBack }) {
 					</div>
 				))}
 			</div>
-			<p className="mt-20 text-center font-pixel-love text-3xl text-yellow-400 mb-12 drop-shadow-[3px_3px_0px_#000] z-10 relative">
-				Esta historia aun no termina...{" "}
+
+			<div className="mt-20 flex flex-col items-center gap-8 pb-10">
+				<p className="text-center font-pixel-love text-3xl text-yellow-400 drop-shadow-[3px_3px_0px_#000] z-10 relative">
+					Esta historia aún no termina...
+				</p>
+				<button
+					onClick={onNext}
+					className="pixel-btn bg-pink-500 animate-bounce !w-auto px-8 flex items-center gap-2"
+				>
+					❤️ Me acompañas?
+				</button>
+			</div>
+		</div>
+	);
+}
+
+// --- COMPONENTE: PÁGINA FINAL ---
+function FinalPage({ onHome }) {
+	return (
+		<div className="w-full min-h-screen bg-[#ff4d6d] flex flex-col items-center justify-center p-6 text-center">
+			<FallingParticles type="petal" />
+			<h2 className="font-pixel-love text-4xl mb-8 animate-pulse text-white drop-shadow-[3px_3px_0px_#000]">
+				TE AMARÉ PARA TODA LA VIDA
+			</h2>
+			<div className="bg-white p-4 shadow-2xl rotate-2 border-8 border-pink-100 mb-8 max-w-sm">
+				<img
+					src="/src/assets/foto11.jpg"
+					alt="Final"
+					className="w-full h-auto"
+				/>
+			</div>
+			<p className="font-pixel-love text-3xl mb-12 text-white drop-shadow-[2px_2px_0px_#000]">
+				Eres mi historia inacabada, la melodía constante que desafía al tiempo y
+				a la lógica. Aunque la distancia o la vida nos prueben, no puedo
+				imaginar un mundo donde tu esencia no sea mi refugio y tu mirada mi
+				único destino posible. Eres, simple y hermosamente, el 'sin embargo' más
+				hermoso a todo. ❤️
 			</p>
+			<button onClick={onHome} className="pixel-btn bg-black !w-48">
+				HOME
+			</button>
 		</div>
 	);
 }
@@ -336,15 +334,12 @@ export default function App() {
 						onClick={handleStart}
 					>
 						<div className="grid grid-cols-13 w-[300px] md:w-[400px] gap-0 heart-beat relative">
-							{heartGrid
-								.flat()
-								.map((pixel, i) => ({ pixel, id: i }))
-								.map((cell) => (
-									<div
-										key={cell.id}
-										className={`aspect-square ${cell.pixel === 1 ? "bg-red-600" : cell.pixel === 3 ? "bg-white" : cell.pixel === 2 ? "bg-black" : "bg-transparent"}`}
-									/>
-								))}
+							{heartGrid.flat().map((pixel, i) => (
+								<div
+									key={i}
+									className={`aspect-square ${pixel === 1 ? "bg-red-600" : pixel === 3 ? "bg-white" : pixel === 2 ? "bg-black" : "bg-transparent"}`}
+								/>
+							))}
 							<div className="absolute inset-0 flex items-center justify-center pointer-events-none text-center px-4">
 								<span className="font-pixel-love text-white text-2xl md:text-3xl drop-shadow-[2px_2px_0px_#000]">
 									PULSA PARA CONTINUAR
@@ -356,31 +351,31 @@ export default function App() {
 			)}
 
 			{page === "menu" && (
-				<div className="flex flex-col items-center gap-8 animate-in fade-in zoom-in duration-500 p-4 max-w-lg text-center bg-[#2a2a2a]">
-					<p className="font-pixel-love text-yellow-100 text-lg md:text-xl italic bg-black/20 p-4 border-2 border-dashed border-white/30">
+				<div className="flex flex-col items-center gap-8 animate-in fade-in zoom-in duration-500 p-4 max-w-lg text-center bg-[#ff6bd6] border-4 border-double border-white shadow-2xl">
+					<p className="font-pixel-love text-yellow-100 text-lg md:text-xl italic bg-black/40 p-4 border-2 border-dashed border-white/30">
 						Quiero que sepas la verdad detrás de mi esfuerzo. Todo lo que
-						estudio no es solo por plata, sino para formar los cimientos de
-						nuestro porvenir. No estudio para tener, estudio para podernos: para
-						poder darte estabilidad, compartir viajes, y levantar juntos los
-						muros de nuestro amor. Eres mi 'por qué' más fuerte. Feliz San
-						Valentín, mi razón uwu
+						estudio no es solo por plata... estudio para formar los cimientos de
+						nuestro porvenir. No me esfuerzo solo para tener, lo hago para
+						podernos, para poder darte estabilidad, compartir viajes, vivencias
+						y levantar los muros de nuestro hogar y fortaleza de amor. Eres mi
+						"por que" más fuerte. Felíz San Valentín, mi razón uwu.
 					</p>
-					<h1 className="text-xl md:text-3xl text--300 drop-shadow-[4px_4px_0px_red] leading-snug">
-						ACEPTAS SER MI NAKAMA PARA TODA LA VIDA?? UWU 🏴‍☠️
+					<h1 className="text-xl md:text-3xl text-[#0b1020] drop-shadow-[2px_2px_0px_white] leading-snug">
+						¿ACEPTAS SER MI NAKAMA PARA TODA LA VIDA?? UWU 🏴‍☠️
 					</h1>
 					<div className="flex flex-col gap-4 w-full max-w-xs">
 						<div className="flex gap-4">
 							<button
 								type="button"
 								onClick={() => setPage("valentine")}
-								className="pixel-btn bg-white flex-1 uppercase  text-red-600"
+								className="pixel-btn bg-white flex-1 text-black"
 							>
 								SÍ
 							</button>
 							<button
 								type="button"
 								onClick={() => setPage("no")}
-								className="pixel-btn bg-red-600 flex-1 uppercase text-gray-300"
+								className="pixel-btn bg-red-600 flex-1 text-gray-300"
 							>
 								NO
 							</button>
@@ -388,7 +383,7 @@ export default function App() {
 						<button
 							type="button"
 							onClick={() => setPage("history")}
-							className="pixel-btn bg-blue-600 uppercase text-sm md:text-lg"
+							className="pixel-btn bg-blue-600"
 						>
 							Nuestra Historia
 						</button>
@@ -397,7 +392,13 @@ export default function App() {
 			)}
 
 			{page === "valentine" && <ValentinePage onBack={renderBackButton} />}
-			{page === "history" && <HistoryPage onBack={renderBackButton} />}
+			{page === "history" && (
+				<HistoryPage
+					onBack={renderBackButton}
+					onNext={() => setPage("final")}
+				/>
+			)}
+			{page === "final" && <FinalPage onHome={() => setPage("start")} />}
 			{page === "no" && <VideoPage onBack={() => setPage("menu")} />}
 		</main>
 	);

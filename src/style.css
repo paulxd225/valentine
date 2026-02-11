@@ -39,6 +39,7 @@ body {
 	display: block;
 	width: 100%;
 	font-size: 1.8rem;
+	text-align: center;
 }
 
 .pixel-btn:active {
@@ -62,26 +63,6 @@ body {
 	}
 }
 
-@keyframes grow-trunk {
-	0% {
-		transform: scaleY(0);
-	}
-	100% {
-		transform: scaleY(1);
-	}
-}
-
-@keyframes grow-branch {
-	0% {
-		transform: scale(0) rotate(var(--rotation, 45deg));
-		opacity: 0;
-	}
-	100% {
-		transform: scale(1) rotate(var(--rotation, 45deg));
-		opacity: 1;
-	}
-}
-
 @keyframes pop-heart {
 	0% {
 		transform: scale(0);
@@ -95,19 +76,6 @@ body {
 		transform: scale(1);
 		opacity: 1;
 	}
-}
-
-.animate-trunk {
-	transform-origin: bottom;
-	animation: grow-trunk 2s ease-in-out forwards;
-	box-shadow: inset -4px 0 0 rgba(0, 0, 0, 0.2);
-}
-
-.animate-branch {
-	transform-origin: bottom;
-	animation: grow-branch 1.2s ease-out forwards;
-	animation-delay: 1.5s;
-	opacity: 0;
 }
 
 .animate-pop {
