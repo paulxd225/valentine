@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import "./style.css";
 import song from "./assets/song.mp3";
 import rejectionVideo from "./assets/video.mp4";
@@ -7,14 +7,20 @@ import rejectionVideo from "./assets/video.mp4";
 function FallingParticles({ type = "petal" }) {
 	const icons =
 		type === "petal" ? ["🌸", "💮", "🍃"] : ["🌻", "🌹", "🌷", "🌼"];
-	const particles = Array.from({ length: 20 }, (_, i) => ({
-		id: i,
-		icon: icons[Math.floor(Math.random() * icons.length)],
-		left: Math.random() * 100,
-		delay: Math.random() * 10,
-		duration: 5 + Math.random() * 10,
-		size: 15 + Math.random() * 20,
-	}));
+
+	// useMemo evita que las partículas se regeneren y causen tirones al actualizar el contador
+	const particles = useMemo(
+		() =>
+			Array.from({ length: 20 }, (_, i) => ({
+				id: i,
+				icon: icons[Math.floor(Math.random() * icons.length)],
+				left: Math.random() * 100,
+				delay: Math.random() * 10,
+				duration: 5 + Math.random() * 10,
+				size: 15 + Math.random() * 20,
+			})),
+		[icons],
+	);
 
 	return (
 		<div className="fixed inset-0 pointer-events-none z-80 overflow-hidden">
@@ -46,7 +52,7 @@ function VideoPage({ onBack }) {
 				onClick={onBack}
 				className="fixed top-4 left-4 z-100 text-white bg-red-600/60 p-3 border-b-4 border-r-4 border-black font-pixel-love text-xl"
 			>
-				← Regresar
+				← Volver
 			</button>
 			<div className="w-full max-w-md border-4 border-red-500 bg-black p-2 shadow-[0_0_20px_red]">
 				<p className="font-pixel-love text-red-500 text-xl md:text-2xl mt-4 mb-4 animate-pulse text-center">
@@ -62,7 +68,7 @@ function VideoPage({ onBack }) {
 					<track kind="captions" srcLang="es" label="Español" />
 				</video>
 			</div>
-			<div className="mt-8 flex gap-4 text-4xl f">
+			<div className="mt-8 flex gap-4 text-4xl">
 				<span>☠️</span>
 				<span>❤️</span>
 				<span>☠️</span>
@@ -76,12 +82,11 @@ function VideoPage({ onBack }) {
 
 // --- COMPONENTE: PÁGINA DE SAN VALENTÍN (SÍ) ---
 function ValentinePage({ onBack }) {
-	const startDate = new Date("2019-06-06T00:00:00");
-	const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+	const startDate = useMemo(() => new Date("2019-06-06T00:00:00"), []);
 
-	function calculateTimeLeft() {
+	const calculateTimeLeft = (start) => {
 		const now = new Date();
-		const diff = now - startDate;
+		const diff = now - start;
 		return {
 			años: Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25)),
 			meses: Math.floor((diff / (1000 * 60 * 60 * 24 * 30.44)) % 12),
@@ -90,23 +95,33 @@ function ValentinePage({ onBack }) {
 			minutos: Math.floor((diff / 1000 / 60) % 60),
 			segundos: Math.floor((diff / 1000) % 60),
 		};
-	}
+	};
+
+	const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(startDate));
 
 	useEffect(() => {
-		const timer = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000);
+		const timer = setInterval(
+			() => setTimeLeft(calculateTimeLeft(startDate)),
+			1000,
+		);
 		return () => clearInterval(timer);
-	}, []);
+	}, [startDate]);
 
 	const heartColors = ["#FF0000", "#FF69B4", "#FF1493", "#FFFFFF", "#FFB6C1"];
-	// Confeti de corazones dispersos
-	const hearts = Array.from({ length: 50 }, (_, i) => ({
-		id: i,
-		left: Math.random() * 100,
-		top: Math.random() * 100,
-		delay: Math.random() * 3,
-		size: 20 + Math.random() * 30,
-		color: heartColors[Math.floor(Math.random() * heartColors.length)],
-	}));
+
+	// Memorizamos los corazones para que no se reinicien con el contador
+	const hearts = useMemo(
+		() =>
+			Array.from({ length: 50 }, (_, i) => ({
+				id: i,
+				left: Math.random() * 100,
+				top: Math.random() * 100,
+				delay: Math.random() * 3,
+				size: 20 + Math.random() * 30,
+				color: heartColors[Math.floor(Math.random() * heartColors.length)],
+			})),
+		[heartColors],
+	);
 
 	return (
 		<div className="w-full min-h-screen flex flex-col items-center bg-[#0ea5e9] p-4 text-white overflow-y-auto pb-20 relative">
@@ -129,7 +144,6 @@ function ValentinePage({ onBack }) {
 					))}
 				</div>
 
-				{/* --- SECCIÓN DE CONFETI DE CORAZONES --- */}
 				<div className="relative w-full h-64 mt-4 overflow-hidden rounded-xl bg-white/10 border-2 border-dashed border-white/30">
 					{hearts.map((h) => (
 						<div
@@ -241,6 +255,7 @@ function HistoryPage({ onBack, onNext }) {
 					Esta historia aún no termina...
 				</p>
 				<button
+					type="button"
 					onClick={onNext}
 					className="pixel-btn bg-pink-500 animate-bounce !w-auto px-8 flex items-center gap-2"
 				>
@@ -273,7 +288,11 @@ function FinalPage({ onHome }) {
 				único destino posible. Eres, simple y hermosamente, el 'sin embargo' más
 				hermoso a todo. ❤️
 			</p>
-			<button onClick={onHome} className="pixel-btn bg-black !w-48">
+			<button
+				type="button"
+				onClick={onHome}
+				className="pixel-btn bg-black !w-48"
+			>
 				HOME
 			</button>
 		</div>
@@ -306,6 +325,11 @@ export default function App() {
 		setTimeout(() => setPage("menu"), 800);
 	};
 
+	const handleHome = () => {
+		setIsOpen(false); // Resetea el estado de apertura para que el corazón se vea
+		setPage("start");
+	};
+
 	const renderBackButton = () => (
 		<button
 			type="button"
@@ -334,9 +358,9 @@ export default function App() {
 						onClick={handleStart}
 					>
 						<div className="grid grid-cols-13 w-[300px] md:w-[400px] gap-0 heart-beat relative">
-							{heartGrid.flat().map((pixel, i) => (
+							{heartGrid.flat().map((pixel, idx) => (
 								<div
-									key={i}
+									key={`pixel-${idx}`}
 									className={`aspect-square ${pixel === 1 ? "bg-red-600" : pixel === 3 ? "bg-white" : pixel === 2 ? "bg-black" : "bg-transparent"}`}
 								/>
 							))}
@@ -368,9 +392,9 @@ export default function App() {
 							<button
 								type="button"
 								onClick={() => setPage("valentine")}
-								className="pixel-btn bg-white flex-1 text-black"
+								className="pixel-btn bg-[#fff] flex-1 !text-[#000] !text-shadow-2xs"
 							>
-								SÍ
+								SI
 							</button>
 							<button
 								type="button"
@@ -398,7 +422,7 @@ export default function App() {
 					onNext={() => setPage("final")}
 				/>
 			)}
-			{page === "final" && <FinalPage onHome={() => setPage("start")} />}
+			{page === "final" && <FinalPage onHome={handleHome} />}
 			{page === "no" && <VideoPage onBack={() => setPage("menu")} />}
 		</main>
 	);
