@@ -1,3 +1,15 @@
+import foto1 from "./assets/foto1.jpg";
+import foto2 from "./assets/foto2.jpeg";
+import foto3 from "./assets/foto3.jpg";
+import foto4 from "./assets/foto4.jpg";
+import foto5 from "./assets/foto5.jpg";
+import foto6 from "./assets/foto6.jpg";
+import foto7 from "./assets/foto7.jpg";
+import foto8 from "./assets/foto8.jpg";
+import foto9 from "./assets/foto9.jpeg";
+import foto10 from "./assets/foto10.png";
+import foto11 from "./assets/foto11.jpg";
+
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import "./style.css";
 import song from "./assets/song.mp3";
@@ -186,48 +198,48 @@ function HistoryPage({ onBack, onNext }) {
 	const fotos = [
 		{
 			id: 1,
-			url: "/src/assets/foto7.jpg",
+			url: foto7,
 			text: "La verdad es que me empecé a enamorar de ti desde antes que lo sospecharas... ❤️",
 		},
 		{
 			id: 2,
-			url: "/src/assets/foto1.jpg",
+			url: foto1,
 			text: "Y cuando menos lo sospechamos ya estabamos soteniendo el corazon del otro",
 		},
 		{
 			id: 3,
-			url: "/src/assets/foto3.jpg",
+			url: foto3,
 			text: "Nunca olvidare nuestro primer 14 de febrero juntos...",
 		},
 		{
 			id: 4,
-			url: "/src/assets/foto2.jpeg",
+			url: foto2,
 			text: "Ni todas las adversidades que pasamos juntos",
 		},
 		{
 			id: 5,
-			url: "/src/assets/foto4.jpg",
+			url: foto4,
 			text: "Ni nuestras aventuras por mas grandes o pequeñas que sean",
 		},
-		{ id: 6, url: "/src/assets/foto5.jpg", text: "Adoro cada salida contigo" },
+		{ id: 6, url: foto5, text: "Adoro cada salida contigo" },
 		{
 			id: 7,
-			url: "/src/assets/foto6.jpg",
+			url: foto6,
 			text: "Porque eres el motor que me motiva a vivir",
 		},
 		{
 			id: 8,
-			url: "/src/assets/foto8.jpg",
+			url: foto8,
 			text: "Y adoro vivir cada dia y fecha especial contigo",
 		},
 		{
 			id: 9,
-			url: "/src/assets/foto9.jpeg",
+			url: foto9,
 			text: "Siempre serás mi inspiración",
 		},
 		{
 			id: 10,
-			url: "/src/assets/foto10.png",
+			url: foto10,
 			text: "Porque gracias a ti he sido mejor persona dia con dia",
 		},
 	];
@@ -284,11 +296,7 @@ function FinalPage({ onHome }) {
 				TE AMARÉ PARA TODA LA VIDA
 			</h2>
 			<div className="bg-white p-4 shadow-2xl rotate-2 border-8 border-pink-100 mb-8 max-w-sm">
-				<img
-					src="/src/assets/foto11.jpg"
-					alt="Final"
-					className="w-full h-auto"
-				/>
+				<img src={foto11} alt="Final" className="w-full h-auto" />
 			</div>
 			<p className="font-pixel-love text-3xl mb-12 text-white drop-shadow-[2px_2px_0px_#000]">
 				Eres mi historia inacabada, la melodía constante que desafía al tiempo y
