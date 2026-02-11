@@ -86,7 +86,20 @@ function ValentinePage({ onBack }) {
 	}
 
 	useEffect(() => {
-		const timer = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000);
+		const start = new Date("2019-06-06T00:00:00");
+		function getTimeLeft() {
+			const now = new Date();
+			const diff = now - start;
+			return {
+				años: Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25)),
+				meses: Math.floor((diff / (1000 * 60 * 60 * 24 * 30.44)) % 12),
+				días: Math.floor((diff / (1000 * 60 * 60 * 24)) % 30.44),
+				horas: Math.floor((diff / (1000 * 60 * 60)) % 24),
+				minutos: Math.floor((diff / 1000 / 60) % 60),
+				segundos: Math.floor((diff / 1000) % 60),
+			};
+		}
+		const timer = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
 		return () => clearInterval(timer);
 	}, []);
 
@@ -110,6 +123,7 @@ function ValentinePage({ onBack }) {
 				Math.cos(4 * t)
 			);
 		return {
+			id: i,
 			x: x * 7.5,
 			y: y * 7.5,
 			delay: 1.8 + (i < 60 ? i * 0.03 : Math.random() * 2),
@@ -158,9 +172,9 @@ function ValentinePage({ onBack }) {
 						</div>
 					</div>
 					<div className="absolute bottom-56 z-20">
-						{hearts.map((h, i) => (
+						{hearts.map((h) => (
 							<div
-								key={i}
+								key={h.id}
 								className="absolute animate-pop opacity-0 pointer-events-none"
 								style={{
 									left: `${h.x}px`,
@@ -316,24 +330,28 @@ export default function App() {
 					<h2 className="font-pixel-love text-2xl text-white mb-8 drop-shadow-[2px_2px_0px_#000] animate-bounce text-center px-4">
 						A MI PROMETIDA EVELYN 💍
 					</h2>
-					<div
-						className={`flex flex-col items-center cursor-pointer transition-all duration-700 ${isOpen ? "scale-[15] opacity-0" : "scale-100"}`}
+					<button
+						type="button"
+						className={`flex flex-col items-center cursor-pointer transition-all duration-700 bg-transparent border-0 p-0 font-inherit ${isOpen ? "scale-[15] opacity-0" : "scale-100"}`}
 						onClick={handleStart}
 					>
 						<div className="grid grid-cols-13 w-[300px] md:w-[400px] gap-0 heart-beat relative">
-							{heartGrid.flat().map((pixel, i) => (
-								<div
-									key={i}
-									className={`aspect-square ${pixel === 1 ? "bg-red-600" : pixel === 3 ? "bg-white" : pixel === 2 ? "bg-black" : "bg-transparent"}`}
-								/>
-							))}
+							{heartGrid
+								.flat()
+								.map((pixel, i) => ({ pixel, id: i }))
+								.map((cell) => (
+									<div
+										key={cell.id}
+										className={`aspect-square ${cell.pixel === 1 ? "bg-red-600" : cell.pixel === 3 ? "bg-white" : cell.pixel === 2 ? "bg-black" : "bg-transparent"}`}
+									/>
+								))}
 							<div className="absolute inset-0 flex items-center justify-center pointer-events-none text-center px-4">
 								<span className="font-pixel-love text-white text-2xl md:text-3xl drop-shadow-[2px_2px_0px_#000]">
 									PULSA PARA CONTINUAR
 								</span>
 							</div>
 						</div>
-					</div>
+					</button>
 				</div>
 			)}
 
