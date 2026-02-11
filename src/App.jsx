@@ -100,10 +100,19 @@ function ValentinePage({ onBack }) {
 	const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(startDate));
 
 	useEffect(() => {
-		const timer = setInterval(
-			() => setTimeLeft(calculateTimeLeft(startDate)),
-			1000,
-		);
+		function getTimeLeft() {
+			const now = new Date();
+			const diff = now - startDate;
+			return {
+				años: Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25)),
+				meses: Math.floor((diff / (1000 * 60 * 60 * 24 * 30.44)) % 12),
+				días: Math.floor((diff / (1000 * 60 * 60 * 24)) % 30.44),
+				horas: Math.floor((diff / (1000 * 60 * 60)) % 24),
+				minutos: Math.floor((diff / 1000 / 60) % 60),
+				segundos: Math.floor((diff / 1000) % 60),
+			};
+		}
+		const timer = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
 		return () => clearInterval(timer);
 	}, [startDate]);
 
@@ -120,7 +129,7 @@ function ValentinePage({ onBack }) {
 				size: 20 + Math.random() * 30,
 				color: heartColors[Math.floor(Math.random() * heartColors.length)],
 			})),
-		[heartColors],
+		[],
 	);
 
 	return (
@@ -358,12 +367,15 @@ export default function App() {
 						onClick={handleStart}
 					>
 						<div className="grid grid-cols-13 w-[300px] md:w-[400px] gap-0 heart-beat relative">
-							{heartGrid.flat().map((pixel, idx) => (
-								<div
-									key={`pixel-${idx}`}
-									className={`aspect-square ${pixel === 1 ? "bg-red-600" : pixel === 3 ? "bg-white" : pixel === 2 ? "bg-black" : "bg-transparent"}`}
-								/>
-							))}
+							{heartGrid
+								.flat()
+								.map((pixel, i) => ({ pixel, id: i }))
+								.map((cell) => (
+									<div
+										key={cell.id}
+										className={`aspect-square ${cell.pixel === 1 ? "bg-red-600" : cell.pixel === 3 ? "bg-white" : cell.pixel === 2 ? "bg-black" : "bg-transparent"}`}
+									/>
+								))}
 							<div className="absolute inset-0 flex items-center justify-center pointer-events-none text-center px-4">
 								<span className="font-pixel-love text-white text-2xl md:text-3xl drop-shadow-[2px_2px_0px_#000]">
 									PULSA PARA CONTINUAR
